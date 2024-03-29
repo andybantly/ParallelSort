@@ -347,7 +347,27 @@ namespace Sort
             {
                 string strLhs = CellValue;
                 string strRhs = rhs.CellValue;
-                iRet = Global.g_bSortOrder ? string.Compare(strLhs, strRhs, false) : string.Compare(strRhs, strLhs, false);
+
+                Double d64Lhs = 0;
+                bool bLhsDbl = false, bLhsInt = Int64.TryParse(strLhs, out Int64 i64Lhs);
+                if (!bLhsInt)
+                    bLhsDbl = Double.TryParse(strLhs, out d64Lhs);
+
+                Double d64Rhs = 0;
+                bool bRhsDbl = false, bRhsInt = Int64.TryParse(strRhs, out Int64 i64Rhs);
+                if (!bRhsInt)
+                    bRhsDbl = Double.TryParse(strRhs, out d64Rhs);
+
+                if (bLhsInt && bRhsInt)
+                    iRet = Global.g_bSortOrder ? (i64Lhs < i64Rhs ? -1 : (i64Lhs == i64Rhs ? 0 : 1)) : (i64Lhs < i64Rhs ? 1 : (i64Lhs == i64Rhs ? 0 : -1));
+                else if (bLhsDbl && bRhsDbl)
+                    iRet = Global.g_bSortOrder ? (d64Lhs < d64Rhs ? -1 : (d64Lhs == d64Rhs ? 0 : 1)) : (d64Lhs < d64Rhs ? 1 : (d64Lhs == d64Rhs ? 0 : -1));
+                else if (bLhsInt && bRhsDbl)
+                    iRet = Global.g_bSortOrder ? (i64Lhs < d64Rhs ? -1 : (i64Lhs == d64Rhs ? 0 : 1)) : (i64Lhs < d64Rhs ? 1 : (i64Lhs == d64Rhs ? 0 : -1));
+                else if (bRhsInt && bLhsDbl)
+                    iRet = Global.g_bSortOrder ? (d64Lhs < i64Rhs ? -1 : (d64Lhs == i64Rhs ? 0 : 1)) : (d64Lhs < i64Rhs ? 1 : (d64Lhs == i64Rhs ? 0 : -1));
+                else // Lexicographic compare
+                    iRet = Global.g_bSortOrder ? string.Compare(strLhs, strRhs, false) : string.Compare(strRhs, strLhs, false);
             }
             return iRet;
         }
