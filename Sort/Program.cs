@@ -1,4 +1,5 @@
 ﻿using Sort;
+using System.Diagnostics;
 using System.Security.Cryptography;
 
 internal class Program
@@ -28,7 +29,7 @@ internal class Program
         string[] Words = {"Apple", "Orange", "Banana", "Onion", "Garlic", "Carrot", "Sun", "Moon", "Mercury",
                 "Venus", "Earth", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune", "Pluto"};
 
-        CArray Arr = new CArray(10, 10);
+        CArray Arr = new CArray(1000, 1000);
 
         bool b;
         do
@@ -80,9 +81,11 @@ internal class Program
             Console.WriteLine(string.Format("Sorting on Column {0} {1}", iColumn, Global.g_bSortOrder ? "Ascending" : "Descending"));
 
             // Sort
+            Stopwatch watch = System.Diagnostics.Stopwatch.StartNew();
             Arr.ParallelSort(iColumn - 1);
-
-            Console.WriteLine();
+            watch.Stop();
+            long Milli = watch.ElapsedMilliseconds;
+            Console.WriteLine(Milli);
 
             Print(Arr);
 
