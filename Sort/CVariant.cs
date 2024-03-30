@@ -430,9 +430,10 @@ namespace Sort
         }
         public void UpdateRow(int iRow)
         {
-            m_TypeCode[0] = m_TypeCode[1];
-            for (int i = 0; i < 1; ++i)
-                m_arrRow[i] = iRow;
+            // The type could have changed during the sort
+            if (m_TypeCode[0] != m_TypeCode[1])
+                m_TypeCode[0] = m_TypeCode[1];
+            m_arrRow[0] = iRow;
         }
         public bool Null
         {
