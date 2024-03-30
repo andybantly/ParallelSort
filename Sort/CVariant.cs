@@ -539,12 +539,17 @@ namespace Sort
         {
             get { return m_TypeCode[0]; }
         }
+
+        public bool Null
+        {
+            get { return m_bNull[0];  }
+        }
         public string CellValue
         {
             get
             {
                 string strCellValue = string.Empty;
-                if (!m_bNull[0])
+                if (!Null)
                 {
                     switch (TypeCode)
                     {
