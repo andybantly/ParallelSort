@@ -5,7 +5,7 @@ namespace Sort
 {
     public class CVariant : IComparable<CVariant>, IEquatable<CVariant>, IComparable, ICloneable
     {
-        private readonly TypeCode[]? m_TypeCode = new TypeCode[2];
+        private TypeCode[]? m_TypeCode = new TypeCode[2];
         private readonly Boolean[]? m_boolVal = new Boolean[2];
         private readonly Char[]? m_cVal = new Char[2];
         private readonly Byte[]? m_byteVal = new Byte[2];
@@ -535,14 +535,13 @@ namespace Sort
             for (int i = 0; i < 1; ++i)
                 m_arrRow[i] = iRow;
         }
-        public TypeCode TypeCode
-        {
-            get { return m_TypeCode[0]; }
-        }
-
         public bool Null
         {
             get { return m_bNull[0];  }
+        }
+        public TypeCode TypeCode
+        {
+            get { return m_TypeCode[0]; }
         }
         public string CellValue
         {
