@@ -5,6 +5,7 @@
         private readonly CVariant[][] m_oData;
         private readonly int m_nRows;
         private readonly int m_nCols;
+        private bool m_bIsIndexed;
 
         public CArray(int nRows, int nCols)
         {
@@ -13,6 +14,7 @@
                 m_oData[iCol] = new CVariant[nRows];
             m_nRows = nRows;
             m_nCols = nCols;
+            m_bIsIndexed = false;
         }
         public CVariant[] this[int iCol]
         {
@@ -36,7 +38,9 @@
 
         public void Sort(int iCol)
         {
-            UpdateAllRows();
+            // Index the row data, if it hasn't happened
+            if (!m_bIsIndexed)
+                UpdateAllRows();
 
             Array.Sort(m_oData[iCol]);
 
@@ -65,12 +69,16 @@
             // Finally, reindex sorted column
             for (int j = 0; j < m_nRows; ++j)
                 m_oData[iCol][j].UpdateRow(j);
+
+            // No longer need to index for the first time
+            m_bIsIndexed = true;
         }
 
         public void ParallelSort(int iCol)
         {
-            // Index the row data
-            ParallelUpdateAllRows();
+            // Index the row data, if it hasn't happened
+            if (!m_bIsIndexed)
+                ParallelUpdateAllRows();
 
             Array.Sort(m_oData[iCol]);
 
@@ -99,6 +107,9 @@
             // Finally, reindex sorted column
             for (int j = 0; j < m_nRows; ++j)
                 m_oData[iCol][j].UpdateRow(j);
+
+            // No longer need to index for the first time
+            m_bIsIndexed = true;
         }
         public int ColLength
         {
