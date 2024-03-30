@@ -29,7 +29,7 @@ internal class Program
         string[] Words = {"Apple", "Orange", "Banana", "Onion", "Garlic", "Carrot", "Sun", "Moon", "Mercury",
                 "Venus", "Earth", "Mars", "Jupiter", "Saturn", "Uranus", "Neptune", "Pluto"};
 
-        CArray Arr = new CArray(1000, 1000);
+        CArray Arr = new CArray(10, 10);
 
         bool b;
         do
