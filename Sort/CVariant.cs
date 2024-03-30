@@ -240,9 +240,9 @@ namespace Sort
         {
             int iRet;
 
-            if (m_TypeCode[0] == rhs.m_TypeCode[0])
+            if (TypeCode == rhs.TypeCode)
             {
-                switch (m_TypeCode[0])
+                switch (TypeCode)
                 {
                     case TypeCode.Boolean:
                         Boolean boolLhs = m_boolVal[0];
@@ -388,7 +388,7 @@ namespace Sort
         public object Clone()
         {
             CVariant oClone;
-            switch (m_TypeCode[0])
+            switch (TypeCode)
             {
                 case TypeCode.Boolean:
                     oClone = new CVariant(m_boolVal[0]);
@@ -535,6 +535,10 @@ namespace Sort
             for (int i = 0; i < 1; ++i)
                 m_arrRow[i] = iRow;
         }
+        public TypeCode TypeCode
+        {
+            get { return m_TypeCode[0]; }
+        }
         public string CellValue
         {
             get
@@ -542,7 +546,7 @@ namespace Sort
                 string strCellValue = string.Empty;
                 if (!m_bNull[0])
                 {
-                    switch (m_TypeCode[0])
+                    switch (TypeCode)
                     {
                         case TypeCode.String:
                             strCellValue = m_strVal[0];
