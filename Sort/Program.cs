@@ -49,15 +49,21 @@ internal class Program
 
             Print(Arr);
 
+            string[] cols;
             string? str;
             int iColumn;
             do
             {
-                Console.Write(string.Format("Sort on column ({0}-{1}): ", 1, Arr.ColLength));
+                b = true;
+                Console.Write(string.Format("Sort on column(s) ({0}-{1}): ", 1, Arr.ColLength));
                 str = Console.ReadLine();
-                b = int.TryParse(str, out iColumn);
-                if (b)
-                    b = iColumn > 0 && iColumn <= Arr.ColLength;
+                cols = str.Split(' ');
+                for (int k = 0; b && k < cols.Length; ++k)
+                {
+                    b = int.TryParse(cols[k], out iColumn);
+                    if (b)
+                        b = iColumn > 0 && iColumn <= Arr.ColLength;
+                }
             } while (!b);
 
             b = false;
@@ -77,15 +83,21 @@ internal class Program
                 }
             } while (!b);
 
-            Console.WriteLine();
-            Console.WriteLine(string.Format("Sorting on Column {0} {1}", iColumn, Global.g_bSortOrder ? "Ascending" : "Descending"));
-
             // Sort
             Stopwatch watch = System.Diagnostics.Stopwatch.StartNew();
-            Arr.ParallelSort(iColumn - 1);
+            for (int k = 0; k < cols.Length; ++k)
+            {
+                int.TryParse(cols[k], out iColumn);
+
+                Console.WriteLine();
+                Console.WriteLine(string.Format("Sorting on Column {0} {1}", iColumn, Global.g_bSortOrder ? "Ascending" : "Descending"));
+
+                Arr.ParallelSort(iColumn - 1);
+            }
             watch.Stop();
+
             long Milli = watch.ElapsedMilliseconds;
-            Console.WriteLine(Milli);
+            Console.WriteLine(string.Format("\r\n {0} milliseconds", Milli));
 
             Print(Arr);
 
