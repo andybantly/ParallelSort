@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Globalization;
 using System.Text;
 
 namespace Sort
 {
-    public class CVariant : IComparable<CVariant>, IEquatable<CVariant>, IComparable, ICloneable
+    public class CVariant : IComparable<CVariant>, IEquatable<CVariant>, IComparable, ICloneable, IFormattable
     {
         private TypeCode[]? m_TypeCode;
         private Boolean[]? m_boolVal;
@@ -117,7 +118,7 @@ namespace Sort
         }
         public CVariant(DateTime dtVal)
         {
-            m_TypeCode = [TypeCode.DateTime];
+            m_TypeCode = [TypeCode.DateTime, TypeCode.DateTime];
             m_dtVal = [dtVal, dtVal];
             m_bNull = [false, false];
         }
@@ -128,6 +129,15 @@ namespace Sort
             m_bNull = [false, false];
         }
         public override string ToString()
+        {
+            return ToString("G", CultureInfo.CurrentCulture);
+        }
+
+        public string ToString(string strFormat)
+        {
+            return ToString(strFormat, CultureInfo.CurrentCulture);
+        }
+        public string ToString(string strFormat, IFormatProvider FP)
         {
             return Value.ToString();
         }
