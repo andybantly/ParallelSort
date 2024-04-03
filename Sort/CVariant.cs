@@ -132,20 +132,66 @@ namespace Sort
         {
             return ToString("G", CultureInfo.CurrentCulture);
         }
-
         public string ToString(string strFormat)
         {
             return ToString(strFormat, CultureInfo.CurrentCulture);
         }
-        public string ToString(string strFormat, IFormatProvider FP)
+        public string ToString(string? strFormat, IFormatProvider? FmtProvider)
         {
-            return Value.ToString();
+            if (Null)
+                return "NULL";
+
+            if (String.IsNullOrEmpty(strFormat))
+                strFormat = "G";
+
+            if (FmtProvider == null)
+                FmtProvider = CultureInfo.CurrentCulture;
+
+            string strFmtStr = string.Format("{{0:{0}}}", strFormat);
+
+            switch (TypeCode)
+            {
+                case TypeCode.Boolean:
+                    return string.Format(FmtProvider, strFmtStr, m_boolVal[0]);
+                case TypeCode.Byte:
+                    return string.Format(FmtProvider, strFmtStr, m_byteVal[0]);
+                case TypeCode.SByte:
+                    return string.Format(FmtProvider, strFmtStr, m_sbyteVal[0]);
+                case TypeCode.Char:
+                    return string.Format(FmtProvider, strFmtStr, m_cVal[0]);
+                case TypeCode.Int16:
+                    return string.Format(FmtProvider, strFmtStr, m_int16Val[0]);
+                case TypeCode.UInt16:
+                    return string.Format(FmtProvider, strFmtStr, m_uint16Val[0]);
+                case TypeCode.Int32:
+                    return string.Format(FmtProvider, strFmtStr, m_int32Val[0]);
+                case TypeCode.UInt32:
+                    return string.Format(FmtProvider, strFmtStr, m_uint32Val[0]);
+                case TypeCode.Int64:
+                    return string.Format(FmtProvider, strFmtStr, m_int64Val[0]);
+                case TypeCode.UInt64:
+                    return string.Format(FmtProvider, strFmtStr, m_uint64Val[0]);
+                case TypeCode.Single:
+                    return string.Format(FmtProvider, strFmtStr, m_fVal[0]);
+                case TypeCode.Double:
+                    return string.Format(FmtProvider, strFmtStr, m_dVal[0]);
+                case TypeCode.Decimal:
+                    return string.Format(FmtProvider, strFmtStr, m_decVal[0]);
+                case TypeCode.DateTime:
+                    return string.Format(FmtProvider, strFmtStr, m_dtVal[0]);
+                case TypeCode.String:
+                    return string.Format(FmtProvider, strFmtStr, m_strVal[0]);
+                case TypeCode.Empty:
+                default:
+                    return Value.ToString();
+            }
         }
         public override int GetHashCode()
         {
             return Utility.GetHashCode(ToString());
         }
-        public int CompareTo(CVariant rhs)
+
+        public int CompareTo(CVariant? rhs)
         {
             int iRet;
 
@@ -251,8 +297,8 @@ namespace Sort
             }
             else
             {
-                string strLhs = Value.ToString();
-                string strRhs = rhs.Value.ToString();
+                string? strLhs = Value.ToString();
+                string? strRhs = rhs.Value.ToString();
                 iRet = Global.g_bSortOrder ? string.Compare(strLhs, strRhs, false) : string.Compare(strRhs, strLhs, false);
             }
             return iRet;
@@ -263,7 +309,6 @@ namespace Sort
                 throw new InvalidOperationException("CompareTo: Not a CVariant");
             return CompareTo((CVariant)rhs);
         }
-
         public object Clone()
         {
             CVariant oClone;
@@ -334,6 +379,7 @@ namespace Sort
         }
         public static bool operator ==(CVariant lhs, CVariant rhs) => lhs.Equals(rhs);
         public static bool operator !=(CVariant lhs, CVariant rhs) => !(lhs == rhs);
+
         public void Copy(CVariant rhs, int iFrom, int iTo)
         {
             switch (rhs.m_TypeCode[iFrom])
@@ -483,102 +529,28 @@ namespace Sort
         }
         public void UpdateRow(int iRow)
         {
-            // The type could have changed during the sort
             if (m_TypeCode[0] != m_TypeCode[1])
                 m_TypeCode[0] = m_TypeCode[1];
             m_arrRow[0] = iRow;
+            m_arrRow[1] = iRow;
         }
         public bool Null
         {
-            get { return m_bNull[0];  }
+            get { return m_bNull[0]; }
         }
         public TypeCode TypeCode
         {
             get { return m_TypeCode[0]; }
         }
+
         public object Value
         {
-            get
-            {
-                string strCellValue = string.Empty;
-                if (!Null)
-                {
-                    switch (TypeCode)
-                    {
-                        case TypeCode.String:
-                            strCellValue = m_strVal[0];
-                            break;
-
-                        case TypeCode.Boolean:
-                            strCellValue = m_boolVal[0].ToString();
-                            break;
-
-                        case TypeCode.Byte:
-                            strCellValue = m_byteVal[0].ToString();
-                            break;
-
-                        case TypeCode.SByte:
-                            strCellValue = m_sbyteVal[0].ToString();
-                            break;
-
-                        case TypeCode.Char:
-                            strCellValue = m_cVal[0].ToString();
-                            break;
-
-                        case TypeCode.Int16:
-                            strCellValue = m_int16Val[0].ToString();
-                            break;
-
-                        case TypeCode.UInt16:
-                            strCellValue = m_uint16Val[0].ToString();
-                            break;
-
-                        case TypeCode.Int32:
-                            strCellValue = m_int32Val[0].ToString();
-                            break;
-
-                        case TypeCode.UInt32:
-                            strCellValue = m_uint32Val[0].ToString();
-                            break;
-
-                        case TypeCode.Int64:
-                            strCellValue = m_int64Val[0].ToString();
-                            break;
-
-                        case TypeCode.UInt64:
-                            strCellValue = m_uint64Val[0].ToString();
-                            break;
-
-                        case TypeCode.Single:
-                            strCellValue = m_fVal[0].ToString();
-                            break;
-
-                        case TypeCode.Double:
-                            strCellValue = m_dVal[0].ToString();
-                            break;
-
-                        case TypeCode.Decimal:
-                            strCellValue = m_decVal[0].ToString();
-                            break;
-
-                        case TypeCode.DateTime:
-                            strCellValue = m_dtVal[0].ToString();
-                            break;
-
-                        case TypeCode.Empty:
-                            strCellValue = string.Empty;
-                            break;
-                    }
-                }
-                else
-                    strCellValue = "NULL";
-                return strCellValue;
-            }
+            get { return ToString(); }
         }
-
         public int Row
         {
             get { return m_arrRow[0]; }
         }
     }
+
 }

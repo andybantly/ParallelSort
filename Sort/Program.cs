@@ -16,7 +16,7 @@ internal class Program
         for (int j = 0; j < Arr.RowLength; ++j)
         {
             for (int i = 0; i < Arr.ColLength; ++i)
-                Console.Write(string.Format("{0}\t", Arr[i][j]));
+                Console.Write(string.Format("{0}\t", Arr[i][j].ToString()));
             Console.WriteLine();
         }
         Console.WriteLine();
